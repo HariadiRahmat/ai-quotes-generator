@@ -89,13 +89,16 @@ export default function Home() {
         {/* Hero */}
         <section className="mx-auto max-w-2xl pt-10 pb-12 text-center sm:pt-16">
           <h1 className="font-serif text-4xl leading-[1.1] tracking-tight text-ink sm:text-6xl">
-            satu quote,
+            Buat quotesmu sendiri, dalam sekejap.
             <br />
-            <span className="italic text-muted">sepuluh versi.</span>
+            <span className="italic text-muted">yang siap dibagikan.</span>
           </h1>
           <p className="mx-auto mt-5 max-w-md font-cormorant text-xl leading-relaxed text-muted">
             tempel satu quote referensi. dapatkan sepuluh versi berbeda,
             langsung jadi gambar yang siap dibagikan.
+          </p>
+          <p className="mt-6 text-sm tracking-wide text-muted/80">
+            By @ditulishari
           </p>
         </section>
 

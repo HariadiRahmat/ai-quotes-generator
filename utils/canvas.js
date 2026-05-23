@@ -47,6 +47,11 @@ export const DEFAULT_STYLE = {
   scale: 1, // manual font multiplier on top of auto-fit (0.6 - 1.4)
 };
 
+// Signature / watermark printed small at the bottom of every image.
+// Empty string = no watermark on the image (the signature lives on the web
+// page under the hero instead).
+export const WATERMARK = "";
+
 export function getFormat(key) {
   return FORMATS[key] || FORMATS[DEFAULT_FORMAT];
 }
@@ -161,8 +166,12 @@ export function drawQuote(ctx, text, format, style, scale = 1) {
 
   const marginX = W * MARGIN_X_RATIO;
   const marginY = Math.max(marginX, H * (MARGIN_X_RATIO * 0.9));
+  // Reserve a little vertical room at the bottom for the watermark so long
+  // quotes never overlap it.
+  const watermarkSize = W * 0.026;
+  const watermarkReserve = WATERMARK ? watermarkSize * 3 : 0;
   const maxWidth = W - marginX * 2;
-  const maxHeight = H - marginY * 2;
+  const maxHeight = H - marginY * 2 - watermarkReserve;
   const maxFont = W * MAX_FONT_RATIO;
   const minFont = W * MIN_FONT_RATIO;
 
@@ -184,10 +193,24 @@ export function drawQuote(ctx, text, format, style, scale = 1) {
   ctx.font = `400 ${fontSize}px ${fontStack}`;
 
   const totalHeight = lines.length * lineHeight;
-  const startY = H / 2 - totalHeight / 2 + lineHeight / 2;
+  // Center the quote within the available area (above the reserved watermark
+  // band), so the composition stays balanced.
+  const availableCenter = (H - watermarkReserve) / 2;
+  const startY = availableCenter - totalHeight / 2 + lineHeight / 2;
   lines.forEach((line, i) => {
     ctx.fillText(line, W / 2, startY + i * lineHeight);
   });
+
+  // Watermark / signature at the bottom, subtle.
+  if (WATERMARK) {
+    ctx.globalAlpha = 0.45;
+    ctx.fillStyle = fg;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "alphabetic";
+    ctx.font = `400 ${watermarkSize}px ${getFontStack("inter")}`;
+    ctx.fillText(WATERMARK, W / 2, H - marginY * 0.55);
+    ctx.globalAlpha = 1;
+  }
 
   ctx.restore();
 }
