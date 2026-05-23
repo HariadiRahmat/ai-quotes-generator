@@ -61,19 +61,33 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>quiet — minimalist quote generator</title>
+        <title>Quotes for you</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="description"
+          content="Quotes for you — satu referensi, sepuluh versi, langsung jadi gambar."
+        />
       </Head>
+
+      {/* Soft ambient background glow for depth */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-0"
+        style={{
+          background:
+            "radial-gradient(60% 50% at 50% 0%, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 70%)",
+        }}
+      />
 
       <div className="relative z-10 mx-auto min-h-screen max-w-6xl px-5 pb-24 sm:px-8">
         {/* Header */}
-        <header className="flex items-center justify-between py-7">
-          <div className="flex items-baseline gap-2">
-            <span className="font-serif text-2xl tracking-tight text-ink">
-              quiet
+        <header className="flex items-center justify-between py-6">
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-ink text-paper font-display text-lg font-bold">
+              Q
             </span>
-            <span className="hidden font-cormorant text-base italic text-muted sm:inline">
-              — words that feel like 2am
+            <span className="font-display text-lg font-semibold tracking-tight text-ink">
+              Quotes&nbsp;for&nbsp;you
             </span>
           </div>
           <Button
@@ -87,17 +101,19 @@ export default function Home() {
         </header>
 
         {/* Hero */}
-        <section className="mx-auto max-w-2xl pt-10 pb-12 text-center sm:pt-16">
-          <h1 className="font-serif text-4xl leading-[1.1] tracking-tight text-ink sm:text-6xl">
-            Buat quotesmu sendiri, dalam sekejap.
-            <br />
-            <span className="italic text-muted">yang siap dibagikan.</span>
+        <section className="mx-auto max-w-3xl pt-14 pb-12 text-center sm:pt-20">
+          <span className="inline-flex items-center gap-2 rounded-full border border-line bg-white/70 px-3.5 py-1.5 text-xs font-medium tracking-wide text-muted backdrop-blur">
+            <span className="h-1.5 w-1.5 rounded-full bg-ink" />
+            satu referensi · sepuluh versi
+          </span>
+          <h1 className="mt-7 font-display text-5xl font-extrabold leading-[1.04] tracking-tight text-ink sm:text-7xl">
+            Quotes for you
           </h1>
-          <p className="mx-auto mt-5 max-w-md font-cormorant text-xl leading-relaxed text-muted">
-            tempel satu quote referensi. dapatkan sepuluh versi berbeda,
-            langsung jadi gambar yang siap dibagikan.
+          <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-muted sm:text-lg">
+            Tempel satu quote referensi, dan dapatkan sepuluh versi berbeda —
+            langsung jadi gambar minimalis yang siap kamu bagikan.
           </p>
-          <p className="mt-6 text-sm tracking-wide text-muted/80">
+          <p className="mt-5 text-sm font-medium tracking-wide text-muted/70">
             By @ditulishari
           </p>
         </section>
@@ -115,12 +131,12 @@ export default function Home() {
         {/* Error */}
         {error && (
           <div className="mx-auto mt-8 max-w-2xl animate-fadeIn rounded-xl2 border border-line bg-white px-5 py-4 text-center">
-            <p className="font-cormorant text-lg italic text-ink">{error}</p>
+            <p className="text-base text-ink">{error}</p>
           </div>
         )}
 
         {/* Output */}
-        <section className="mt-14">
+        <section className="mt-16">
           {loading ? (
             <Loader />
           ) : quotes.length > 0 ? (
@@ -133,8 +149,8 @@ export default function Home() {
           ) : (
             !error && (
               <div className="py-16 text-center">
-                <p className="font-cormorant text-xl italic text-muted/70">
-                  your quotes will appear here.
+                <p className="text-base text-muted/70">
+                  Hasil quotes kamu akan muncul di sini.
                 </p>
               </div>
             )
@@ -152,8 +168,8 @@ export default function Home() {
       />
 
       <footer className="relative z-10 border-t border-line py-8 text-center">
-        <p className="font-cormorant text-base italic text-muted">
-          made for slow, quiet moments.
+        <p className="text-sm text-muted">
+          Quotes for you · by @ditulishari
         </p>
       </footer>
     </>

@@ -1,5 +1,5 @@
 // Modern, elegant loading state: a breathing indicator + staggered skeleton grid.
-export default function Loader({ label = "writing quietly" }) {
+export default function Loader({ label = "menulis dengan tenang" }) {
   return (
     <div className="animate-fadeIn">
       <div className="flex items-center justify-center gap-3 py-10">
@@ -14,9 +14,7 @@ export default function Loader({ label = "writing quietly" }) {
             style={{ animationDelay: "0.4s" }}
           />
         </div>
-        <span className="font-cormorant text-lg italic text-muted">
-          {label}…
-        </span>
+        <span className="text-base text-muted">{label}…</span>
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">

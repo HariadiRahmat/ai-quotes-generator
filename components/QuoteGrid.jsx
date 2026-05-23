@@ -30,8 +30,10 @@ export default function QuoteGrid({ topic, quotes, onRegenerate, loading }) {
     <div className="animate-fadeIn">
       <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-muted">mood</p>
-          <h2 className="font-serif text-3xl tracking-tight text-ink">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted/70">
+            referensi
+          </p>
+          <h2 className="mt-1 max-w-md truncate font-display text-2xl font-bold tracking-tight text-ink">
             {topic}
           </h2>
         </div>
