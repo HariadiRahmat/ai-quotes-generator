@@ -106,3 +106,29 @@ export function IconClose(props) {
     </svg>
   );
 }
+
+export function IconCaption(props) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M4 5h16" />
+      <path d="M4 10h16" />
+      <path d="M4 15h10" />
+      <path d="M4 20h6" />
+    </svg>
+  );
+}
+
+export function IconSpark(props) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M12 3v4" />
+      <path d="M12 17v4" />
+      <path d="M3 12h4" />
+      <path d="M17 12h4" />
+      <path d="M6 6l2.5 2.5" />
+      <path d="M15.5 15.5 18 18" />
+      <path d="M18 6l-2.5 2.5" />
+      <path d="M8.5 15.5 6 18" />
+    </svg>
+  );
+}
