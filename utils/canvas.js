@@ -228,6 +228,18 @@ export async function quoteToBlob(text, format = DEFAULT_FORMAT, style = DEFAULT
   );
 }
 
+// Render a quote to a base64 PNG data URL (for sending to the server / API).
+export async function quoteToDataURL(text, format = DEFAULT_FORMAT, style = DEFAULT_STYLE, pixelRatio = 2) {
+  await ensureFontsLoaded();
+  const fmt = getFormat(format);
+  const canvas = document.createElement("canvas");
+  canvas.width = fmt.width * pixelRatio;
+  canvas.height = fmt.height * pixelRatio;
+  const ctx = canvas.getContext("2d");
+  drawQuote(ctx, text, format, style, pixelRatio);
+  return canvas.toDataURL("image/png", 1);
+}
+
 export async function renderToCanvasEl(canvasEl, text, format = DEFAULT_FORMAT, style = DEFAULT_STYLE, pixelRatio = 2) {
   await ensureFontsLoaded();
   const fmt = getFormat(format);

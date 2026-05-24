@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { renderToCanvasEl, getFormat, DEFAULT_STYLE } from "../utils/canvas";
+import {
+  renderToCanvasEl,
+  getFormat,
+  DEFAULT_STYLE,
+  quoteToDataURL,
+} from "../utils/canvas";
 import { downloadSingle, copyText } from "../utils/download";
 import {
   IconCopy,
@@ -7,6 +12,7 @@ import {
   IconDownload,
   IconCaption,
   IconSpark,
+  IconInstagram,
 } from "./Icons";
 
 export default function QuoteCard({ quote, topic, index, format, style }) {
@@ -21,6 +27,11 @@ export default function QuoteCard({ quote, topic, index, format, style }) {
   const [hashtags, setHashtags] = useState("");
   const [capError, setCapError] = useState("");
   const [capCopied, setCapCopied] = useState(false);
+
+  // Instagram posting state
+  const [posting, setPosting] = useState(false);
+  const [postState, setPostState] = useState("idle"); // idle | confirm | done | error
+  const [postMsg, setPostMsg] = useState("");
 
   const fmt = getFormat(format);
   const st = style || DEFAULT_STYLE;
@@ -86,6 +97,30 @@ export default function QuoteCard({ quote, topic, index, format, style }) {
     }
   };
 
+  const doPost = async () => {
+    setPosting(true);
+    setPostState("idle");
+    setPostMsg("");
+    try {
+      const dataUrl = await quoteToDataURL(quote, format, st, 2);
+      const fullCaption = [caption, hashtags].filter(Boolean).join("\n\n");
+      const res = await fetch("/api/post-instagram", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageBase64: dataUrl, caption: fullCaption }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Gagal posting.");
+      setPostState("done");
+      setPostMsg("Terposting ke Instagram ✓");
+    } catch (err) {
+      setPostState("error");
+      setPostMsg(err.message);
+    } finally {
+      setPosting(false);
+    }
+  };
+
   return (
     <div
       className="group opacity-0 animate-fadeUp"
@@ -114,6 +149,13 @@ export default function QuoteCard({ quote, topic, index, format, style }) {
               className="flex h-9 w-9 items-center justify-center rounded-full text-paper transition-colors hover:bg-white/15"
             >
               <IconCaption />
+            </button>
+            <button
+              onClick={() => setPostState("confirm")}
+              title="Post ke Instagram"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-paper transition-colors hover:bg-white/15"
+            >
+              <IconInstagram />
             </button>
             <button
               onClick={handleDownload}
@@ -193,6 +235,64 @@ export default function QuoteCard({ quote, topic, index, format, style }) {
       <p className="mt-3 px-1 font-cormorant text-sm italic leading-snug text-muted line-clamp-2">
         {quote.replace(/\n/g, " · ")}
       </p>
+
+      {/* Instagram post confirm / status */}
+      {postState === "confirm" && (
+        <div className="mt-2 animate-fadeIn rounded-xl border border-line bg-white p-3">
+          <p className="text-sm text-ink">
+            Posting gambar ini ke Instagram sekarang?
+            {!caption && (
+              <span className="mt-1 block text-xs text-muted">
+                Belum ada caption — akan diposting tanpa caption. Klik tombol
+                caption dulu kalau mau pakai caption.
+              </span>
+            )}
+          </p>
+          <div className="mt-3 flex items-center gap-2">
+            <button
+              onClick={doPost}
+              disabled={posting}
+              className="inline-flex items-center gap-1.5 rounded-full bg-ink px-3 py-1.5 text-xs font-medium text-paper transition-colors hover:bg-black disabled:opacity-50"
+            >
+              {posting ? (
+                <>
+                  <IconSpark width={14} height={14} className="animate-spin" />
+                  memposting…
+                </>
+              ) : (
+                <>
+                  <IconInstagram width={14} height={14} /> ya, posting
+                </>
+              )}
+            </button>
+            <button
+              onClick={() => setPostState("idle")}
+              disabled={posting}
+              className="text-xs text-muted underline hover:text-ink disabled:opacity-50"
+            >
+              batal
+            </button>
+          </div>
+        </div>
+      )}
+
+      {postState === "done" && (
+        <div className="mt-2 animate-fadeIn rounded-xl border border-line bg-white p-3">
+          <p className="text-sm text-ink">{postMsg}</p>
+        </div>
+      )}
+
+      {postState === "error" && (
+        <div className="mt-2 animate-fadeIn rounded-xl border border-line bg-white p-3">
+          <p className="text-sm text-ink">{postMsg}</p>
+          <button
+            onClick={() => setPostState("confirm")}
+            className="mt-2 text-xs text-muted underline hover:text-ink"
+          >
+            coba lagi
+          </button>
+        </div>
+      )}
     </div>
   );
 }
